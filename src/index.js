@@ -89,8 +89,23 @@ const buyTicket = async (movie)=>{
         console.error('error buying ticket', error)
     }
 }
+//making the delete request 
+const deleteFilm = async (filmId) =>{
+    try{
+        const response =await fetch(`${url}/${filmId}`, 
+        { method: 'DELETE' });
+        return response.ok;
+    }
+    catch(error){
+        console.error('error del film',error);
+        return false;
+    }
 
-
+}
+const removeFilmFromList = (filmId)=>{
+    const filmElement = document.getElementById(`film-${filmId}`)
+   if(filmElement)filmElement.remove();
+}
 
 
 
@@ -112,8 +127,18 @@ const movieMenu = async () => {
         movieLi.classList.add('film','item');
         //dispaly movie title in the list
         movieLi.textContent = movie.title
+        
+        
         //make delete button
-       
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent='Delete'
+        deleteButton.addEventListener('click',async()=>{
+            if (confirm('Are you sure you want to delete this film?')){
+                if (await deleteFilm(movie.id)) removeFilmFromList(movie.id);
+            }
+        })
+      /// kindly note that you will have to reload the page manualy for the delete function to work
+       movieLi.appendChild(deleteButton);
         //add click to display movie details
         movieLi.addEventListener('click',async()=>{
             displayMovieDetails(movie)
