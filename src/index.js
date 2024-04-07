@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    //now we want to show the movie details in the webpage
    const displayMovieDetails =(movie)=>{
 
-
+//these allow us to accses the various items in the html and add what we need
    const poster = document.getElementById('poster')
    poster.src = movie.poster;
    
@@ -37,17 +37,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   
    const buyTicketButton = document.getElementById('buy-ticket')
-   
+   //enables the button 
    if(remainingMovieTickets > 0 ){
     buyTicketButton.textContent = 'buy ticket ASAP'
     buyTicketButton.disabled = false;
 }
+//disables the button when tickets are 0
 else{
     buyTicketButton.textContent = 'Sold out '
     buyTicketButton.disabled = true
     }
 
         //add functionality to the button
+        //when the tickets end it logs no available tickets
         buyTicketButton.addEventListener('click', async (event)=>{
          
          
@@ -59,6 +61,7 @@ else{
              }
          })
 }
+
 const buyTicket = async (movie)=>{
     try{
         const updateTicketSold = movie.tickets_sold+1
@@ -74,6 +77,8 @@ const buyTicket = async (movie)=>{
         if(response.ok){
             const updatedMovie = await response.json();
             displayMovieDetails(updatedMovie);
+        // you can add alerts for more functionality
+            alert('happy watching')
         }
         else{
             console.error('failed to update tikets sold on server')
@@ -98,11 +103,9 @@ const movieMenu = async () => {
         const movies = await response.json();
        
         const moviesList = document.getElementById('films')
-       
-        const placeLi = document.querySelector('#films .film.item')
-        if (placeLi){
-            moviesList.removeChild(placeLi);
-        }
+        moviesList.innerHTML = '';
+
+        
         //add movies in a list order
         movies.forEach(async(movie)=>{
         const movieLi = document.createElement('li')
