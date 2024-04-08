@@ -1,9 +1,12 @@
 // Your code here
+//this code is full of bugs but i tried my best  😭
 let url ='http://localhost:3000/films'
 
 document.addEventListener('DOMContentLoaded',()=>{
 //this allows accses to the server containing all the movies
    const fetchMovieDetails = async (id) =>{
+       // a try block allows you to define a block of code to be tested for errors while being executed
+
     try {
            const response = await fetch(`${url}/${id}`);
            return await response.json();
@@ -154,7 +157,7 @@ const movieMenu = async () => {
 }
 
 
-
+//calling the functions to display details on my page
 movieMenu();
 fetchMovieDetails(1)
 .then(movie => displayMovieDetails(movie))
