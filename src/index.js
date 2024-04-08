@@ -3,7 +3,10 @@
 let url ='http://localhost:3000/films'
 let ticketurl ="http://localhost:3000/tickets"
 document.addEventListener('DOMContentLoaded',()=>{
-const postTicket = (filmid, numberoftickets)=>{
+
+// create a function that posts the film tickets bought to the backend
+
+    const postTicket = (filmid, numberoftickets)=>{
     const ticketData ={
         film_id: filmid,
         number_of_tickets: numberoftickets
