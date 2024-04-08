@@ -1,8 +1,29 @@
 // Your code here
 //this code is full of bugs but i tried my best  😭
 let url ='http://localhost:3000/films'
-
+let ticketurl ="http://localhost:3000/tickets"
 document.addEventListener('DOMContentLoaded',()=>{
+const postTicket = (filmid, numberoftickets)=>{
+    const ticketData ={
+        film_id: filmid,
+        number_of_tickets: numberoftickets
+    }
+
+    fetch(ticketurl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ticketData)
+        })
+        .then(response => response.json())
+
+    }
+
+
+
+
+
 //this allows accses to the server containing all the movies
    const fetchMovieDetails = async (id) =>{
        // a try block allows you to define a block of code to be tested for errors while being executed
@@ -55,14 +76,19 @@ else{
         //when the tickets end it logs no available tickets
         buyTicketButton.addEventListener('click', async (event)=>{
          
-         
+            postTicket(movie.id,1);
+
+             //check if there are tickets
              if(remainingMovieTickets > 0){
                 await buyTicket(movie)
              }
              else{
                  console.log('no available tickets');
              }
+            
+             
          })
+         
 }
 
 const buyTicket = async (movie)=>{
@@ -156,10 +182,9 @@ const movieMenu = async () => {
     
 }
 
-
 //calling the functions to display details on my page
 movieMenu();
-fetchMovieDetails(1)
+fetchMovieDetails(4)
 .then(movie => displayMovieDetails(movie))
 .catch(error => console.error('error fetching and displayng movie details',error))
 });
