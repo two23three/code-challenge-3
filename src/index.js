@@ -26,13 +26,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         
     }
 };
-
-    
-
-
-
-
-
 //this allows accses to the server containing all the movies
    const fetchMovieDetails = async (id) =>{
        // a try block allows you to define a block of code to be tested for errors while being executed
@@ -70,6 +63,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   
    const buyTicketButton = document.getElementById('buy-ticket')
+  
    //enables the button 
    if(remainingMovieTickets > 0 ){
     buyTicketButton.textContent = 'buy ticket ASAP'
@@ -84,7 +78,7 @@ else{
         //add functionality to the button
         //when the tickets end it logs no available tickets
         buyTicketButton.addEventListener('click', async (event)=>{
-         
+         event.preventDefault();
             if (remainingMovieTickets > 0) {
                 buyTicketButton.disabled=true;
                 const ticket={
