@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 // create a function that posts the film tickets bought to the backend
 
     const postTicket = async(tickets)=>{
-    
-
     try {
         const response = await fetch(ticketurl, {
             method: 'POST',
@@ -26,12 +24,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         
     }
 };
-
-    
-
-
-
-
 
 //this allows accses to the server containing all the movies
    const fetchMovieDetails = async (id) =>{
@@ -127,6 +119,8 @@ const buyTicket = async (movie)=>{
     }
 }
 //making the delete request 
+    // when a movie has been deleted kindly reload the page to see changes
+    
 const deleteFilm = async (filmId) =>{
     try{
         const response =await fetch(`${url}/${filmId}`, 
@@ -143,10 +137,6 @@ const removeFilmFromList = (filmId)=>{
     const filmElement = document.getElementById(`film-${filmId}`)
    if(filmElement)filmElement.remove();
 }
-
-
-
-
 const movieMenu = async () => {
     // a try block allows you to define a block of code to be tested for errors while being executed
     
@@ -159,13 +149,11 @@ const movieMenu = async () => {
        
         const moviesList = document.getElementById('films')
         moviesList.innerHTML = '';
-
-        
         //add movies in a list order
         movies.forEach(async(movie)=>{
         const movieLi = document.createElement('li')
         movieLi.classList.add('film','item');
-        //dispaly movie title in the list
+        //display movie title in the list
         movieLi.textContent = movie.title
         
         
@@ -191,10 +179,8 @@ const movieMenu = async () => {
      catch(error){
         console.error('ERROR DISPLAYING MOVIES',error)
      }
-    
 
 }
-
 //calling the functions to display details on my page
 movieMenu();
 fetchMovieDetails(1)
