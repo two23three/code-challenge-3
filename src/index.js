@@ -1,27 +1,33 @@
 // Your code here
-//this code is full of bugs but i tried my best  😭
+
 let url ='http://localhost:3000/films'
 let ticketurl ="http://localhost:3000/tickets"
 document.addEventListener('DOMContentLoaded',()=>{
 
 // create a function that posts the film tickets bought to the backend
 
-    const postTicket = (filmid, numberoftickets)=>{
-    const ticketData ={
-        film_id: filmid,
-        number_of_tickets: numberoftickets
-    }
+    const postTicket = async(tickets)=>{
+    
 
-    fetch(ticketurl, {
+    try {
+        const response = await fetch(ticketurl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(ticketData)
-        })
-        .then(response => response.json())
+            body: JSON.stringify(tickets)
+        });
 
+        if (!response.ok) {
+            throw new Error('Failed to post ticket');
+        }
+    } catch (error) {
+        console.error('Error posting ticket', error);
+        
     }
+};
+
+    
 
 
 
@@ -79,16 +85,18 @@ else{
         //when the tickets end it logs no available tickets
         buyTicketButton.addEventListener('click', async (event)=>{
          
-            postTicket(movie.id,1);
-
-             //check if there are tickets
-             if(remainingMovieTickets > 0){
-                await buyTicket(movie)
-             }
-             else{
-                 console.log('no available tickets');
-             }
-            
+            if (remainingMovieTickets > 0) {
+                buyTicketButton.disabled=true;
+                const ticket={
+                    film_id: movie.id,
+                    number_of_tickets:1
+                }
+                await postTicket([ticket]);
+               
+                await buyTicket(movie);
+            } else {
+                console.log('No available tickets');
+            }
              
          })
          
@@ -109,10 +117,7 @@ const buyTicket = async (movie)=>{
         if(response.ok){
             const updatedMovie = await response.json();
             displayMovieDetails(updatedMovie);
-        // you can add alerts for more functionality
-            alert('happy watching')
-        }
-        else{
+        }else{
             console.error('failed to update tikets sold on server')
         }
 
@@ -147,6 +152,9 @@ const movieMenu = async () => {
     
     try {
         const response = await fetch(url);
+        if(!response.ok) {
+        throw Error('failed to fetch movies');
+    }
         const movies = await response.json();
        
         const moviesList = document.getElementById('films')
@@ -172,22 +180,24 @@ const movieMenu = async () => {
       /// kindly note that you will have to reload the page manualy for the delete function to work
        movieLi.appendChild(deleteButton);
         //add click to display movie details
-        movieLi.addEventListener('click',async()=>{
+        movieLi.addEventListener('click',async(event)=>{
             displayMovieDetails(movie)
         })
+    
          moviesList.appendChild(movieLi)
         })
+    
     }
      catch(error){
         console.error('ERROR DISPLAYING MOVIES',error)
      }
-
     
+
 }
 
 //calling the functions to display details on my page
 movieMenu();
-fetchMovieDetails(4)
+fetchMovieDetails(1)
 .then(movie => displayMovieDetails(movie))
 .catch(error => console.error('error fetching and displayng movie details',error))
 });
