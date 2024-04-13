@@ -63,31 +63,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   
    const buyTicketButton = document.getElementById('buy-ticket')
-  
-   //enables the button 
-   if(remainingMovieTickets > 0 ){
-    buyTicketButton.textContent = 'buy ticket ASAP'
-    buyTicketButton.disabled = false;
-}
-//disables the button when tickets are 0
-else{
-    buyTicketButton.textContent = 'Sold out '
-    buyTicketButton.disabled = true
-    }
-
-        //add functionality to the button
-        //when the tickets end it logs no available tickets
+   buyTicketButton.dataset.movieId = movie.id;
+   //add event listener
         buyTicketButton.addEventListener('click', async (event)=>{
          event.preventDefault();
+          const movieId = event.target.dataset.movieId
             if (remainingMovieTickets > 0) {
-                buyTicketButton.disabled=true;
                 const ticket={
                     film_id: movie.id,
                     number_of_tickets:1
                 }
                 await postTicket([ticket]);
                
-                await buyTicket(movie);
+                await buyTicket(movieId);
             } else {
                 console.log('No available tickets');
             }
@@ -96,10 +84,11 @@ else{
          
 }
 
-const buyTicket = async (movie)=>{
+const buyTicket = async (movieId)=>{
     try{
+        const movie = await fetchMovieDetails(movieId)
         const updateTicketSold = movie.tickets_sold+1
-        const response = await fetch (`${url}/${movie.id}`,{
+        const response = await fetch (`${url}/${movieId}`,{
             method: 'PATCH',
             headers:{
                 'Content-Type':'application/json'
@@ -109,6 +98,7 @@ const buyTicket = async (movie)=>{
             })
         });
         if(response.ok){
+
             const updatedMovie = await response.json();
             displayMovieDetails(updatedMovie);
         }else{
@@ -157,7 +147,11 @@ const movieMenu = async () => {
         
         //add movies in a list order
         movies.forEach(async(movie)=>{
-        const movieLi = document.createElement('li')
+         const buyTicketButton = document.createElement('button')
+         buyTicketButton.textContent='buy Ticket';
+         buyTicketButton.dataset.movieId= movie.id
+       
+         const movieLi = document.createElement('li')
         movieLi.classList.add('film','item');
         //dispaly movie title in the list
         movieLi.textContent = movie.title
@@ -178,7 +172,7 @@ const movieMenu = async () => {
             displayMovieDetails(movie)
         })
     
-         moviesList.appendChild(movieLi)
+        moviesList.appendChild(movieLi)
         })
     
     }
